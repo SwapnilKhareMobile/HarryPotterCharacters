@@ -2,6 +2,8 @@ package com.sw.sample.data.di
 
 import com.sw.sample.data.repo.CharRepository
 import com.sw.sample.data.repo.CharRepositoryImpl
+import com.sw.sample.data.source.local.CharLocalDataSource
+import com.sw.sample.data.source.local.CharLocalDataSourceImpl
 import com.sw.sample.data.source.remote.CharRemoteDataSource
 import com.sw.sample.data.source.remote.CharRemoteDataSourceImpl
 import dagger.Binds
@@ -19,5 +21,7 @@ abstract class DataModule {
     @Binds
     abstract fun bindCharRemoteDataSource(impl: CharRemoteDataSourceImpl): CharRemoteDataSource
 
+    @Binds
+    abstract fun bindCharLocalDataSource(impl: CharLocalDataSourceImpl): CharLocalDataSource
 
 }

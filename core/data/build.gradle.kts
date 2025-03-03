@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt.gradle)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 android {
@@ -14,6 +15,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+    }
+    room {
+        schemaDirectory("$projectDir/schemas")
     }
 
     buildTypes {
@@ -45,7 +49,12 @@ dependencies {
 
     implementation(project(":core:model"))
     implementation(project(":core:network"))
+    implementation(project(":core:db"))
     implementation(libs.retrofit.core)
+
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
+    implementation(libs.room.runtime)
 
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
