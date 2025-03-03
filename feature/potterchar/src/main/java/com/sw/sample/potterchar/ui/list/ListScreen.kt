@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.sw.sample.potterchar.ui.list.model.ListScreenData
+import com.sw.sample.domain.model.ListScreenData
 
 @Composable
 fun ListScreen(
@@ -33,7 +33,9 @@ fun ListScreen(
         )
         ListScreenUIState.Loading -> LoadingProgress(modifier)
         ListScreenUIState.Nothing -> {}
-        is ListScreenUIState.Success -> ShowCharList(modifier, (uiState.value as ListScreenUIState.Success).data) { }
+        is ListScreenUIState.Success -> ShowCharList(modifier, (uiState.value as ListScreenUIState.Success).data) {
+            onClick(it)
+        }
         null -> ErrorScreen(
             modifier,
             onClick = { viewModel.fetchCharsList() }
@@ -45,7 +47,7 @@ fun ListScreen(
 fun ShowCharList(modifier: Modifier, list: List<ListScreenData>, onClick: (str: String) -> Unit){
     LazyColumn {
         items(list.size) {
-            Text(text = list[it].charName, modifier = modifier.clickable { onClick(list[it].charName) })
+            Text(text = list[it].charName, modifier = modifier.clickable { onClick(list[it].id) })
         }
     }
 }

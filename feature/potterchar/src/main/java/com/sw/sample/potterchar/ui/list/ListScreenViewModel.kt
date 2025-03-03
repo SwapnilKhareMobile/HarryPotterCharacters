@@ -3,7 +3,6 @@ package com.sw.sample.potterchar.ui.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sw.sample.domain.CharUseCase
-import com.sw.sample.domain.GetCharUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

@@ -1,11 +1,12 @@
-package com.sw.sample.potterchar.ui.list.model
+package com.sw.sample.domain.model
 
 data class ListScreenData(
+    val id: String,
     val charName: String,
-    private val actorName: String,
-    private val species: String,
-    private val house: String,
-    private val dateOfBirth: String?,
-    private val image: String,
-    private val isAlive: Boolean,
+    val actorName: String,
+    val species: String,
+    val house: String,
+    val dateOfBirth: String?,
+    val image: String,
+    val isAlive: Boolean,
 )
