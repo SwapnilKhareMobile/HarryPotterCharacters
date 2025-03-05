@@ -60,4 +60,11 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.hilt.android)
 
+    testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.hilt.android.testing)
+    testImplementation(libs.coroutine.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.turbine)
+
 }

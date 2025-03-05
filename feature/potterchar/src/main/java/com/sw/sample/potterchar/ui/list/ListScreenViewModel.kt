@@ -2,6 +2,7 @@ package com.sw.sample.potterchar.ui.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sw.sample.potterchar.util.ConnectivityObserver
 import com.sw.sample.domain.CharUseCase
 import com.sw.sample.domain.model.ListScreenData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListScreenViewModel @Inject constructor(private val getCharUseCase: CharUseCase) :
+class ListScreenViewModel @Inject constructor(
+    private val getCharUseCase: CharUseCase,
+    private val connectivityObserver: ConnectivityObserver?
+) :
     ViewModel() {
     private val _uiState = MutableStateFlow<ListScreenUIState?>(ListScreenUIState.Nothing)
     val uiState: StateFlow<ListScreenUIState?> = _uiState
@@ -31,46 +35,46 @@ class ListScreenViewModel @Inject constructor(private val getCharUseCase: CharUs
 
     fun fetchCharsList() {
         viewModelScope.launch {
-            getCharUseCase().map {
-                if (it.isNullOrEmpty()) {
-                    ListScreenUIState.Error("Something went wrong")
-                } else {
-                    fullList = it
-                    ListScreenUIState.Success(it)
+                    getCharUseCase().map {
+                        if (it.isNullOrEmpty()) {
+                            ListScreenUIState.Error("Something went wrong")
+                        } else {
+                            fullList = it
+                            ListScreenUIState.Success(it)
+                        }
+                    }.catch { ListScreenUIState.Error("Something went wrong") }
+                        .stateIn(
+                            viewModelScope,
+                            SharingStarted.WhileSubscribed(5000),
+                            ListScreenUIState.Loading
+                        ).collect {
+                            _uiState.value = it
+                        }
                 }
-            }.catch { ListScreenUIState.Error("Something went wrong") }
-                .stateIn(
-                    viewModelScope,
-                    SharingStarted.WhileSubscribed(5000),
-                    ListScreenUIState.Loading
-                ).collect {
-                    _uiState.value = it
-                }
-        }
-    }
-
-    fun updateSearchQuery(query: String) {
-        _searchQuery.value = query
-        filterList(query)
-    }
-
-    private fun filterList(query: String) {
-        val filteredList = if (query.isBlank()) {
-            fullList
-        } else {
-            fullList.filter {
-                it.charName.contains(query, ignoreCase = true) || it.actorName.contains(
-                    query,
-                    ignoreCase = true
-                )
             }
+
+            fun updateSearchQuery(query: String) {
+                _searchQuery.value = query
+                filterList(query)
+            }
+
+            private fun filterList(query: String) {
+                val filteredList = if (query.isBlank()) {
+                    fullList
+                } else {
+                    fullList.filter {
+                        it.charName.contains(query, ignoreCase = true) || it.actorName.contains(
+                            query,
+                            ignoreCase = true
+                        )
+                    }
+                }
+                _uiState.value = ListScreenUIState.Success(filteredList)
+            }
+
+            fun clearSearch() {
+                _searchQuery.value = ""
+                _uiState.value = ListScreenUIState.Success(fullList) // Reset to full list
+            }
+
         }
-        _uiState.value = ListScreenUIState.Success(filteredList)
-    }
-
-    fun clearSearch() {
-        _searchQuery.value = ""
-        _uiState.value = ListScreenUIState.Success(fullList) // Reset to full list
-    }
-
-}

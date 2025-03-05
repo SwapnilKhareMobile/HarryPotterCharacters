@@ -58,4 +58,25 @@ dependencies {
     implementation(libs.room.runtime)
 
     implementation(libs.converter.gson)
+
+    testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.hilt.android.testing)
+    testImplementation(libs.coroutine.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.androidx.core.testing)
+
+    testImplementation(libs.turbine)
+    kspTest(libs.hilt.android.compiler)
+    testAnnotationProcessor(libs.hilt.android.compiler)
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.android.compiler)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.navigation.testing)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.navigation.runtime)
+    androidTestImplementation(libs.androidx.test.runner)
+
+    kspAndroidTest(libs.hilt.android.testing)
+    androidTestImplementation(libs.androidx.ui.test.junit4.android)
+
 }

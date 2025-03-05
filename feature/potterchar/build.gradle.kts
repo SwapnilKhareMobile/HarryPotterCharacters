@@ -80,7 +80,7 @@ dependencies {
     androidTestImplementation(libs.androidx.navigation.testing)
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.navigation.runtime)
-    implementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.runner)
 
     kspAndroidTest(libs.hilt.android.testing)
     androidTestImplementation(libs.androidx.ui.test.junit4.android)
