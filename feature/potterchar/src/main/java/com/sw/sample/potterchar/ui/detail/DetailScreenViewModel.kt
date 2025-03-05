@@ -19,16 +19,14 @@ class DetailScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val uiState: StateFlow<DetailScreenUIState> = savedStateHandle
-        .getStateFlow<String?>("id", null)
-        .filterNotNull()
-        .flatMapLatest {  id ->
+        .getStateFlow<String?>("id", null).filterNotNull()
+        .flatMapLatest { id ->
             getCharUseCase.getCharById(id)
         }.map { model ->
             DetailScreenUIState.Success(
                 data = model
             )
-        }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DetailScreenUIState.Loading)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DetailScreenUIState.Loading)
 
 
 }

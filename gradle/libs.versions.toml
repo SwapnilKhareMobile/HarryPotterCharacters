@@ -10,19 +10,31 @@ activityCompose = "1.8.2"
 composeBom = "2024.04.01"
 appcompat = "1.7.0"
 material = "1.12.0"
-androidxNavigation = "2.5.3"
+androidxNavigation = "2.8.8"
 retrofit = "2.11.0"
 retrofitKotlinxSerializationJson = "1.0.0"
 okhttp = "4.12.0"
 hilt = "2.55"
 room = "2.6.1"
-androidxHilt = "1.0.0"
+androidxHilt = "1.2.0"
 ksp = "2.1.0-1.0.29"
 coil = "2.7.0"
-
+roomTesting = "2.6.1"
+coroutineTestVer = "1.10.1"
+mockk = "1.13.11"
+coreTesting = "2.2.0"
+rules = "1.5.0"
+truth = "1.6.0"
+navigationTesting = "2.8.8"
+turbine = "1.2.0"
+uiTestJunit4Android = "1.7.8"
+navigationRuntime = "2.8.8"
+androidxTestRunner = "1.6.2"
+androidxTestCore = "1.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-rules = { module = "androidx.test:rules", version.ref = "rules" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -58,6 +70,18 @@ ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devto
 converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "roomTesting" }
+coroutine-test = {group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutineTestVer"}
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+androidx-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "coreTesting" }
+androidx-truth = { group = "androidx.test.ext", name = "truth", version.ref = "truth" }
+androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigationTesting" }
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+androidx-ui-test-junit4-android = { group = "androidx.compose.ui", name = "ui-test-junit4-android", version.ref = "uiTestJunit4Android" }
+androidx-navigation-runtime = { group = "androidx.navigation", name = "navigation-runtime", version.ref = "navigationRuntime" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
+androidx-test-core  = { module = "androidx.test:core", version.ref = "androidxTestCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

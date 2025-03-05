@@ -28,13 +28,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.sw.sample.domain.model.ListScreenData
 
 @Composable
 fun ListScreen(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     onClick: (str: String) -> Unit,
     viewModel: ListScreenViewModel = hiltViewModel()
 ) {

@@ -12,14 +12,14 @@ import com.sw.sample.potterchar.ui.detail.DetailScreen
 import com.sw.sample.potterchar.ui.list.ListScreen
 
 @Composable
-fun MainNavigation(modifier: Modifier = Modifier, navController: NavHostController = rememberNavController()) {
+fun MainNavigation(modifier: Modifier = Modifier, navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = "list",
         modifier = modifier
     ) {
         composable("list"){
-            ListScreen(modifier,navController,onClick = { id ->
+            ListScreen(modifier, onClick = { id ->
                 navController.navigate("detail/$id")
             })
         }
