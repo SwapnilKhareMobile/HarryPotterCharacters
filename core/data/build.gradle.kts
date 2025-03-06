@@ -50,6 +50,7 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:network"))
     implementation(project(":core:db"))
+    implementation(project(":core:common"))
     implementation(libs.retrofit.core)
 
     ksp(libs.room.compiler)
