@@ -166,6 +166,7 @@ fun CharacterItem(character: ListScreenData, onClick: () -> Unit) {
             Column {
                 Text(text = character.charName, fontWeight = FontWeight.Bold)
                 Text(text = "Played by: ${character.actorName}")
+                Text(text = "Species: ${character.species}")
             }
         }
     }
