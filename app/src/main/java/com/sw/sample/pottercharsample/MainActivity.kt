@@ -1,17 +1,14 @@
 package com.sw.sample.pottercharsample
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.sw.sample.pottercharsample.ui.MainNavigation
@@ -22,17 +19,17 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     lateinit var navController: NavHostController
 
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
         setContent {
             PotterCharSampleTheme {
                 Scaffold(modifier = Modifier.fillMaxSize(),
                 ) {
-                    innerPadding ->
                     navController = rememberNavController()
                     MainNavigation(
-                        modifier = Modifier.padding(innerPadding),
+                        modifier = Modifier.padding(1.dp),
                         navController,
                     )
                 }

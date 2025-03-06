@@ -24,7 +24,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -34,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sw.sample.domain.model.ListScreenData
 import com.sw.sample.potterchar.util.NetworkConnectionState
 import com.sw.sample.potterchar.util.NetworkConnectivity
@@ -46,20 +46,21 @@ fun ListScreen(
     onClick: (str: String) -> Unit,
     viewModel: ListScreenViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState.collectAsState()
-    val searchQuery by viewModel.searchQuery.collectAsState()
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val connectionState by NetworkConnectivity().rememberConnectivityState()
 
     val isConnected by remember(connectionState) {
         derivedStateOf { connectionState === NetworkConnectionState.Available }
     }
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(isConnected, uiState) {
         if ((uiState.value is ListScreenUIState.Loading || uiState.value is ListScreenUIState.Nothing) && !isConnected) {
             viewModel.showInternetError("No Internet Connection")
         } else if ((uiState.value is ListScreenUIState.Loading || uiState.value is ListScreenUIState.Nothing) && isConnected) {
             viewModel.fetchCharsList()
         }
     }
+
     Scaffold(topBar = {
         TopAppBar(
             title = {
@@ -68,14 +69,14 @@ fun ListScreen(
         )
     }) { innerPadding ->
 
-        Column {
+        Column(modifier = modifier.padding(innerPadding)) {
             TextField(
                 value = searchQuery,
                 onValueChange = { viewModel.updateSearchQuery(it) },
                 label = { Text("Search Characters") },
                 modifier = Modifier
+                    .padding(5.dp)
                     .fillMaxWidth()
-                    .padding(innerPadding)
             )
             when (uiState.value) {
                 is ListScreenUIState.Error -> ErrorScreen(
@@ -105,7 +106,7 @@ fun ListScreen(
 
 @Composable
 fun ShowCharList(modifier: Modifier, list: List<ListScreenData>, onClick: (str: String) -> Unit) {
-    LazyColumn(modifier = modifier) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(list.size) {
             CharacterItem(character = list[it]) { onClick(list[it].id) }
         }
