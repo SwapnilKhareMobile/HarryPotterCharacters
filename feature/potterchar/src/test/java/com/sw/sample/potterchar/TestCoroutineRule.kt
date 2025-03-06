@@ -10,7 +10,7 @@ import org.junit.runner.Description
 
 @ExperimentalCoroutinesApi
 class TestCoroutineRule : TestWatcher() {
-    val testDispatcher = StandardTestDispatcher()
+    private val testDispatcher = StandardTestDispatcher()
 
     override fun starting(description: Description?) {
         Dispatchers.setMain(testDispatcher)

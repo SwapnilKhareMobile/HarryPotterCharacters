@@ -53,7 +53,6 @@ class CharRepositoryImplTest {
 
     @Test
     fun `getChars - api success - returns api data`() = runTest(testDispatcher) {
-        // Arrange
         val charDataResultItem = CharDataResult()
         val apiData = CharDataResultItem(
             actor = "Daniel Radcliffe",
@@ -79,31 +78,21 @@ class CharRepositoryImplTest {
         )
         charDataResultItem.add(apiData)
         coEvery { charRemoteDataSource.getChars() } returns flowOf(Response.success(charDataResultItem))
-
-        // Act
         val result = charRepositoryImpl.getChars().toList()
-
-        // Assert
         assertEquals(1, result.size)
     }
 
     @Test
     fun `getChars - api failure - returns error response`() = runTest(testDispatcher) {
-        // Arrange
         val errorResponse = Response.error<CharDataResult>(404, "Not Found".toResponseBody())
         coEvery { charRemoteDataSource.getChars() } returns flowOf(errorResponse)
-
-        // Act
         val result = charRepositoryImpl.getChars().toList()
-
-        // Assert
         assertEquals(1, result.size)
         assertEquals(errorResponse.code(), result[0].code())
     }
 
     @Test
     fun `getLocalCharList - returns local data`() = runTest(testDispatcher) {
-        // Arrange
         val localData = listOf(
             DBDataResult(
                 id = "1",
@@ -117,18 +106,13 @@ class CharRepositoryImplTest {
             )
         )
         coEvery { charLocalDataSource.getLocalCharList() } returns flowOf(localData)
-
-        // Act
         val result = charRepositoryImpl.getLocalCharList().toList()
-
-        // Assert
         assertEquals(1, result.size)
         assertEquals(localData, result[0])
     }
 
     @Test
     fun `addIntoLocalCharList - adds data to local data source`() = runTest(testDispatcher) {
-        // Arrange
         val localData = listOf(
             DBDataResult(
                 id = "1",
@@ -142,21 +126,8 @@ class CharRepositoryImplTest {
             )
         )
 
-        // Act
         charRepositoryImpl.addIntoLocalCharList(localData)
-
-        // Assert
         coVerify { charLocalDataSource.addIntoLocalCharList(localData) }
     }
 }
 
-data class ApiData(
-    val id: String,
-    val name: String,
-    val actor: String,
-    val species: String,
-    val house: String,
-    val dateOfBirth: String?,
-    val image: String,
-    val alive: Boolean
-)

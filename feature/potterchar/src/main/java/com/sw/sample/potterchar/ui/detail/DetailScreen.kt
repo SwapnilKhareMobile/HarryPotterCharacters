@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -32,6 +34,7 @@ fun DetailScreen(
     viewModel: DetailScreenViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState()
+
     when (uiState.value) {
         is DetailScreenUIState.Error -> ErrorScreen(
             modifier,
@@ -42,6 +45,7 @@ fun DetailScreen(
         DetailScreenUIState.Nothing -> {}
 
     }
+
 }
 
 @Composable
@@ -76,4 +80,16 @@ fun CharacterItemDetail(character: ListScreenData, onClick: () -> Unit) {
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SecondScreenTopBar() {
+    TopAppBar(
+        title = {
+            Text(text = "Character Details")
+        }
+    )
+
+
 }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -30,7 +31,18 @@ class ListScreenViewModel @Inject constructor(
     private var fullList: List<ListScreenData> = emptyList()
 
     init {
-        fetchCharsList()
+        checkNetworkAndFetch()
+    }
+    private fun checkNetworkAndFetch() {
+        viewModelScope.launch {
+            connectivityObserver?.observe()?.collectLatest { status ->
+                if (status == ConnectivityObserver.Status.Available) {
+                    fetchCharsList()
+                } else {
+                    _uiState.value = ListScreenUIState.Error("No internet connection")
+                }
+            }
+        }
     }
 
     fun fetchCharsList() {

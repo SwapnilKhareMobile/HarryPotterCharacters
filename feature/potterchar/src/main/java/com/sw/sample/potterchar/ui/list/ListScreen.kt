@@ -17,8 +17,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sw.sample.domain.model.ListScreenData
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreen(
     modifier: Modifier = Modifier,
@@ -39,33 +43,44 @@ fun ListScreen(
     val uiState = viewModel.uiState.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
 
-    Column {
-        TextField(
-            value = searchQuery,
-            onValueChange = { viewModel.updateSearchQuery(it) },
-            label = { Text("Search Characters") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        when (uiState.value) {
-            is ListScreenUIState.Error -> ErrorScreen(
-                modifier,
-                onClick = { viewModel.fetchCharsList() }
-            )
-
-            ListScreenUIState.Loading -> LoadingProgress(modifier)
-            ListScreenUIState.Nothing -> {}
-            is ListScreenUIState.Success -> ShowCharList(
-                modifier,
-                (uiState.value as ListScreenUIState.Success).data
-            ) {
-                viewModel.clearSearch()
-                onClick(it)
+    Scaffold(topBar = {
+        TopAppBar(
+            title = {
+                Text(text = "Harry Potter Characters")
             }
+        )
+    }) { innerPadding ->
 
-            null -> ErrorScreen(
-                modifier,
-                onClick = { viewModel.fetchCharsList() }
+        Column {
+            TextField(
+                value = searchQuery,
+                onValueChange = { viewModel.updateSearchQuery(it) },
+                label = { Text("Search Characters") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(innerPadding)
             )
+            when (uiState.value) {
+                is ListScreenUIState.Error -> ErrorScreen(
+                    modifier,
+                    onClick = { viewModel.fetchCharsList() }
+                )
+
+                ListScreenUIState.Loading -> LoadingProgress(modifier)
+                ListScreenUIState.Nothing -> {}
+                is ListScreenUIState.Success -> ShowCharList(
+                    modifier,
+                    (uiState.value as ListScreenUIState.Success).data
+                ) {
+                    viewModel.clearSearch()
+                    onClick(it)
+                }
+
+                null -> ErrorScreen(
+                    modifier,
+                    onClick = { viewModel.fetchCharsList() }
+                )
+            }
         }
     }
 }
@@ -101,7 +116,6 @@ fun ErrorScreen(modifier: Modifier = Modifier, onClick: () -> Unit) {
         Text(text = "Click here to try again", modifier = modifier.clickable {
             onClick()
         })
-
     }
 }
 

@@ -61,10 +61,7 @@ class GetCharUseCaseTest {
         )
         coEvery { charRepository.getLocalCharList() } returns flowOf(localData)
 
-        // Act
         val result = getCharUseCase().toList()
-
-        // Assert
         assertEquals(1, result.size)
         assertEquals(1, result[0]?.size)
         assertEquals("Harry Potter", result[0]?.first()?.charName)
@@ -72,21 +69,17 @@ class GetCharUseCaseTest {
 
     @Test
     fun `invoke - local data empty - api failure - returns empty list`() = runTest(testDispatcher) {
-        // Arrange
         coEvery { charRepository.getLocalCharList() } returns flowOf(emptyList())
         coEvery { charRepository.getChars() } returns flowOf(Response.error(404, "Not Found".toResponseBody()))
 
-        // Act
         val result = getCharUseCase().toList()
 
-        // Assert
         assertEquals(1, result.size)
         assertTrue(result[0].isNullOrEmpty())
     }
 
     @Test
     fun `getCharById - char found - returns char`() = runTest(testDispatcher) {
-        // Arrange
         val localData = listOf(
             DBDataResult(
                 id = "1",
@@ -101,10 +94,8 @@ class GetCharUseCaseTest {
         )
         coEvery { charRepository.getLocalCharList() } returns flowOf(localData)
 
-        // Act
         val result = getCharUseCase.getCharById("1").toList()
 
-        // Assert
         assertEquals(1, result.size)
         assertEquals("Harry Potter", result[0].charName)
     }
