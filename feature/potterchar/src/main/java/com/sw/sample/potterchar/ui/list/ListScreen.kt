@@ -23,8 +23,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,8 +35,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sw.sample.domain.model.ListScreenData
+import com.sw.sample.potterchar.util.NetworkConnectionState
+import com.sw.sample.potterchar.util.NetworkConnectivity
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
 @Composable
 fun ListScreen(
     modifier: Modifier = Modifier,
@@ -42,7 +48,18 @@ fun ListScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
+    val connectionState by NetworkConnectivity().rememberConnectivityState()
 
+    val isConnected by remember(connectionState) {
+        derivedStateOf { connectionState === NetworkConnectionState.Available }
+    }
+    LaunchedEffect(key1 = true) {
+        if ((uiState.value is ListScreenUIState.Loading || uiState.value is ListScreenUIState.Nothing) && !isConnected) {
+            viewModel.showInternetError("No Internet Connection")
+        } else if ((uiState.value is ListScreenUIState.Loading || uiState.value is ListScreenUIState.Nothing) && isConnected) {
+            viewModel.fetchCharsList()
+        }
+    }
     Scaffold(topBar = {
         TopAppBar(
             title = {
@@ -68,6 +85,7 @@ fun ListScreen(
 
                 ListScreenUIState.Loading -> LoadingProgress(modifier)
                 ListScreenUIState.Nothing -> {}
+
                 is ListScreenUIState.Success -> ShowCharList(
                     modifier,
                     (uiState.value as ListScreenUIState.Success).data
@@ -87,7 +105,7 @@ fun ListScreen(
 
 @Composable
 fun ShowCharList(modifier: Modifier, list: List<ListScreenData>, onClick: (str: String) -> Unit) {
-    LazyColumn {
+    LazyColumn(modifier = modifier) {
         items(list.size) {
             CharacterItem(character = list[it]) { onClick(list[it].id) }
         }
@@ -97,7 +115,7 @@ fun ShowCharList(modifier: Modifier, list: List<ListScreenData>, onClick: (str: 
 @Composable
 fun LoadingProgress(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()

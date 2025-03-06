@@ -4,7 +4,6 @@ import app.cash.turbine.test
 import com.sw.sample.domain.CharUseCase
 import com.sw.sample.domain.model.ListScreenData
 import com.sw.sample.potterchar.TestCoroutineRule
-import com.sw.sample.potterchar.util.NetworkConnectivityObserver
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -29,7 +28,6 @@ class ListScreenViewModelTest {
     private lateinit var viewModel: ListScreenViewModel
 
     private val mockUseCase: CharUseCase = mockk()
-    private val mockConnectivityObserver:NetworkConnectivityObserver = mockk()
     private val mockData = listOf(
         ListScreenData(
             "1",
@@ -57,7 +55,7 @@ class ListScreenViewModelTest {
     fun setUp() {
         MockKAnnotations.init(this)
         coEvery { mockUseCase() } returns flowOf(mockData) // Ensure this mock is properly set
-        viewModel = ListScreenViewModel(mockUseCase,mockConnectivityObserver)
+        viewModel = ListScreenViewModel(mockUseCase)
     }
 
     @Test
@@ -115,6 +113,14 @@ class ListScreenViewModelTest {
         advanceUntilIdle()
         val uiState = viewModel.uiState.value
         assertEquals(ListScreenUIState.Error("Something went wrong"), uiState)
+    }
+
+    @Test
+    fun `showInternetError should update uiState with error message`() = runTest {
+        val errorMessage = "No internet connection"
+        viewModel.showInternetError(errorMessage)
+        val uiState = viewModel.uiState.value
+        assertEquals(ListScreenUIState.Error(errorMessage), uiState)
     }
 
 }

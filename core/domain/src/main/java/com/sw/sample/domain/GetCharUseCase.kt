@@ -3,12 +3,14 @@ package com.sw.sample.domain
 import com.sw.sample.data.repo.CharRepository
 import com.sw.sample.db.model.DBDataResult
 import com.sw.sample.domain.model.ListScreenData
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class GetCharUseCase @Inject constructor(private val charRepository: CharRepository) : CharUseCase {
 
     override suspend fun invoke(): Flow<List<ListScreenData>?> {
